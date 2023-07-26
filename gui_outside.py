@@ -342,6 +342,10 @@ class Application(tk.Tk):
         self.title("UCAS文献下载工具")
         self.geometry('500x500')
 
+        # 加载两张图片
+        self.bao_image1 = tk.PhotoImage(file='catt.png')
+        self.bao_image2 = tk.PhotoImage(file='catt2.png')
+
         self.driver = None
         self.style = ttk.Style()
         self.style.configure('TButton', font=('Arial', 12), foreground='black')
@@ -369,9 +373,11 @@ class Application(tk.Tk):
         button_frame = ttk.Frame(self, padding="10")
         button_frame.pack(fill=tk.X)
 
-        self.bao_image = tk.PhotoImage(file='catt.png')
-        self.bao_button = ttk.Button(button_frame, image=self.bao_image, command=self.start_download_thread)
+        # 创建按钮并使用第一张图片
+        self.bao_button = tk.Label(button_frame, image=self.bao_image1, bd=0)
         self.bao_button.pack(side=tk.LEFT, padx=10)
+        # 为 label 添加点击事件绑定
+        self.bao_button.bind('<Button-1>', self.start_download_thread)
 
         self.download_label = ttk.Label(button_frame, text="点猫下载")
         self.download_label.pack(side=tk.LEFT)
@@ -395,9 +401,6 @@ class Application(tk.Tk):
         )
         self.guide_text.insert(tk.INSERT, guide_string)
 
-
-
-
     def close_browser(self):
         if self.driver:
             self.driver.quit()
@@ -405,7 +408,13 @@ class Application(tk.Tk):
         else:
             messagebox.showinfo("提示", "浏览器已关闭或未开启")
 
-    def start_download_thread(self):
+    def start_download_thread(self, event):
+        # 在点击事件中改变按钮的图片
+        if self.bao_button['image'] == str(self.bao_image1):  # 如果当前是第一张图片
+            self.bao_button.config(image=self.bao_image2)  # 就改为第二张
+        else:
+            self.bao_button.config(image=self.bao_image1)  # 否则改为第一张
+
         # 创建一个新线程来运行 download_paper 方法
         download_thread = threading.Thread(target=self.download_paper)
         # 启动新线程
@@ -452,6 +461,7 @@ class Application(tk.Tk):
         download_func(self.driver, doi)
 
         messagebox.showinfo("成功", "已自动关闭浏览器")
+
 
 def main():
     app = Application()

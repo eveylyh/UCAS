@@ -5,8 +5,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox, scrolledtext
 
-from PIL import ImageTk
-from PIL.Image import Image
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
